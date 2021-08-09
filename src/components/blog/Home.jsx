@@ -1,10 +1,10 @@
 import React from 'react';
-
+import Header from './Header';
+import './home.scss';
 export default function Home() {
     return (
         <>
-            {' '}
-            <h1>This is the blog</h1>
+            <Header />
         </>
     );
 }
