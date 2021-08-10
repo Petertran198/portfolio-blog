@@ -1,6 +1,9 @@
 import React, { useRef, useState } from 'react';
 import { Card, Form, Button, Alert } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { useAuth } from '../../context/AuthContext';
+import google from './google.svg';
 
 export default function SignIn() {
     const emailRef = useRef();
@@ -8,22 +11,47 @@ export default function SignIn() {
     const passwordConfirmRef = useRef();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState([]);
+    const { logIn, signInWithGoogle } = useAuth();
+    const history = useHistory();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError([]);
+        try {
+            await logIn(emailRef.current.value, passwordRef.current.value);
+            history.push('./');
+            toast.info('Success', { closeButton: false, hideProgressBar: true });
+        } catch (e) {
+            toast.warning(e.message, {
+                closeButton: false,
+                hideProgressBar: true,
+                autoClose: 2000,
+            });
+        }
 
-        if (passwordRef.current.value !== passwordConfirmRef.current.value) {
-            setError((e) => [...e, `Passwords must be the same`]);
-        }
-        if (passwordRef.current.value === '') {
-            setError((e) => [...e, `Password blank`]);
-        }
-        if (passwordConfirmRef.current.value === '') {
-            setError((e) => [...e, `Password Confirm blank`]);
-        }
+        setLoading(false);
+    };
 
+    const handleGoogleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError([]);
+        try {
+            signInWithGoogle()
+                .then(() => {
+                    toast.info('Success', {
+                        closeButton: false,
+                        hideProgressBar: true,
+                        delay: 1000,
+                    });
+                })
+                .then(() => {
+                    history.push('./');
+                });
+        } catch (e) {
+            toast.danger('Failed', { closeButton: false, hideProgressBar: true });
+        }
         setLoading(false);
     };
 
@@ -31,7 +59,7 @@ export default function SignIn() {
         <div>
             <Card className='' style={{ minWidth: '350px' }}>
                 <Card.Body>
-                    <h2 className='text-center'>Sign In</h2>
+                    <h2 className='text-center'>Login</h2>
                     {error &&
                         error.map((e) => {
                             return (
@@ -62,7 +90,19 @@ export default function SignIn() {
                                 block
                                 onClick={handleSubmit}
                             >
-                                Sign In
+                                {loading ? 'Logging in' : 'Login'}
+                            </Button>{' '}
+                            <Button
+                                className='mt-2'
+                                block
+                                onClick={handleGoogleSubmit}
+                            >
+                                <img
+                                    src={google}
+                                    className='img-thumbnail pl-0 float-left'
+                                    style={{ height: '30px', width: '35px' }}
+                                />
+                                {loading ? 'Logging in' : 'Sign In With Google'}
                             </Button>
                         </Form.Group>
                     </Form>

@@ -14,13 +14,7 @@ export default function NavMenu() {
         try {
             await logOut();
             history.push('./');
-            toast.success('Logged out!', {
-                closeButton: false,
-                hideProgressBar: true,
-            });
-        } catch {
-            toast.error('Error can not log out', { closeButton: false });
-        }
+        } catch {}
     };
 
     return (

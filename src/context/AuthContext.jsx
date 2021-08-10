@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { auth } from '../firebase/Firebase';
+import { auth, googleProvider } from '../firebase/Firebase';
 
 const AuthContext = React.createContext();
 
@@ -28,10 +28,21 @@ export function AuthProvider({ children }) {
         return auth.signOut();
     };
 
+    const logIn = (email, password) => {
+        //return promise if successful will login so you got to async/await when used in different files
+        return auth.signInWithEmailAndPassword(email, password);
+    };
+
+    const signInWithGoogle = () => {
+        return auth.signInWithPopup(googleProvider);
+    };
+
     const value = {
         currentUser,
         signUp,
         logOut,
+        logIn,
+        signInWithGoogle,
     };
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
