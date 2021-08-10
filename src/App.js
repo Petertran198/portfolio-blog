@@ -6,22 +6,28 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Home from './components/blog/Home';
 import PublicRoute from './route/PublicRoute';
 import PrivateRoute from './route/PrivateRoute';
+import Header from './components/blog/Header';
+import NavMenu from './components/menu/NavMenu';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
     return (
         <>
             <Router>
+                <ToastContainer />
+                <PublicRoute exact path='/' component={Home}></PublicRoute>
+                <NavMenu />
                 <Switch>
-                    <PublicRoute exact path='/' component={Home}></PublicRoute>
                     <PublicRoute
                         path='/signup'
-                        restricted={true}
+                        restricted={false}
                         needContainer={true}
                         component={SignUp}
                     ></PublicRoute>
                     <PublicRoute
                         path='/signin'
-                        restricted={true}
+                        restricted={false}
                         needContainer={true}
                         component={SignIn}
                     ></PublicRoute>

@@ -22,13 +22,16 @@ export function AuthProvider({ children }) {
         //return promise if successful will sign up, so you got to async/await when used in different files
         return auth.createUserWithEmailAndPassword(email, password);
     };
-    const hello = () => {
-        return console.log('hi');
+
+    const logOut = () => {
+        //return promise if successful will sign up, so you got to async/await when used in different files
+        return auth.signOut();
     };
+
     const value = {
         currentUser,
         signUp,
-        hello,
+        logOut,
     };
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
